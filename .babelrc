@@ -1,6 +1,14 @@
 {
   "presets": [
-    ["es2015", { "modules": false }],
+    ["env", {
+      "modules": false,
+      "targets": {
+        "browsers": ["last 2 versions", "> 5%"],
+        "node": "6.10",
+        "uglify": false,
+        "useBuiltIns": false
+      }
+    }],
     "react"
   ],
   "env": {
