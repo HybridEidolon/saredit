@@ -163,7 +163,7 @@ export function decompress(buffer) {
         size += 2;
       }
 
-      offset |= 0xFFFFFFFFFFFE0000;
+      offset |= 0xFFFFFFFFFFFFE000;
     } else {
       // short copy
       flag = readCursor.readBit() ? 1 : 0;
