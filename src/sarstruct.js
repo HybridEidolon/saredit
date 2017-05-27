@@ -13,23 +13,30 @@ export const layerSchema = {
     bottomRight: pointSchema,
   },
   props: (cursor, registry) => {
-    let unk1 = struct.parseWithCursor(cursor, 'u8', registry);
-    let unk2 = struct.parseWithCursor(cursor, 'u8', registry);
-    let someVal = struct.parseWithCursor(cursor, 'u16le', registry);
+    let val1 = struct.parseWithCursor(cursor, 'u32le', registry);
+    let val2 = struct.parseWithCursor(cursor, 'u32le', registry);
 
-    let layerTexture = someVal >>> 5;
-    let transparency = (someVal >> 2) & 0b111;
+    let visible = (val1 >> 31) & 1 > 0 ? false : true;
+    let textureIndex = (val1 >> 21) & 1023;
+    let transparency = (val1 >> 18) & 7;
+    let colorR = (val1 >> 0) & 63;
+    let colorG = (val1 >> 6) & 63;
+    let colorB = (val1 >> 12) & 63;
 
-    let color = struct.parseWithCursor(cursor, 'u16le', registry);
-    let unk3 = struct.parseWithCursor(cursor, 'u16le', registry);
+    let colorX = (val2 >> 0) & 63;
+    let colorY = (val2 >> 6) & 63;
+    let colorZ = (val2 >> 12) & 63;
+
     return {
-      unk1,
-      someVal,
-      layerTexture,
+      visible,
+      textureIndex,
       transparency,
-      unk2,
-      color,
-      unk3,
+      colorR,
+      colorG,
+      colorB,
+      colorX,
+      colorY,
+      colorZ,
     };
   },
 };
