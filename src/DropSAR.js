@@ -2,13 +2,18 @@ import React, {Component} from 'react';
 
 import BlowfishContext from './blowfish';
 import * as prs from './prs';
+import * as struct from './struct';
+import sarSchema from './sarstruct';
 
-const SARPrint = ({buffer}) => (
+const SARPrint = ({parsed, buffer}) => (
   <div>
-    <p>Here's the decrypted, decompressed sar result:</p>
+    <p>Here's the parsed object</p>
     <pre>
-      {new Uint8Array(buffer).toString()}
+      {JSON.stringify(parsed, null, 2)}
     </pre>
+    <code style={{maxWidth: '320px'}}>
+      {new Uint8Array(buffer).toString()}
+    </code>
   </div>
 );
 
@@ -59,9 +64,13 @@ export class DropSAR extends Component {
             u8view = u8view.map(v => v ^ 0x95);
             resultBuffer = prs.decompress(u8view.buffer);
           }
+
+          let parsed = struct.parse(resultBuffer, sarSchema);
+
           this.setState({
             file,
             buffer: resultBuffer,
+            parsed: parsed,
             error: false,
           });
         } catch (e) {
@@ -86,7 +95,7 @@ export class DropSAR extends Component {
         <p>drop a sar file here</p>
         <input type="file" name="sarfile" accept="application/*" onChange={this.handleDrop} />
         <p>File name: <code>{this.state.file ? this.state.file.name : 'pick a file'}</code></p>
-        <SARPrint buffer={this.state.buffer}/>
+        <SARPrint buffer={this.state.buffer} parsed={this.state.parsed}/>
         {this.state.error ?
           <p>Error decoding! {this.state.error}</p>
         : null}
