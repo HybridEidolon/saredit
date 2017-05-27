@@ -26,15 +26,15 @@ export function decompress(buffer) {
     if (flag) {
       isLongCopy = true;
       // long copy or eof
-      offset = readCursor.readInt16(true);
+      offset = readCursor.readUint16(true);
       if (offset === 0) {
         break;
       }
-      size = offset & 0x0007;
-      offset >>= 3;
+      size = offset & 7;
+      offset = (offset >> 3) - 8192;
       if (size === 0) {
-        size = readCursor.readUint8();
-        size += 1;
+        let num3 = readCursor.readUint8();
+        size = num3 + 10;
       } else {
         size += 2;
       }
