@@ -11,9 +11,6 @@ const SARPrint = ({parsed, buffer}) => (
     <pre>
       {JSON.stringify(parsed, null, 2)}
     </pre>
-    <code style={{maxWidth: '320px'}}>
-      {new Uint8Array(buffer).toString()}
-    </code>
   </div>
 );
 

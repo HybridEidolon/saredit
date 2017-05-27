@@ -59,6 +59,7 @@ module.exports = function(env) {
         'react-dom',
         'redux',
         'react-redux',
+        'core-js',
       ],
       main: [
         ...(env.production ? [] : []),
@@ -68,7 +69,7 @@ module.exports = function(env) {
     resolve: {
       extensions: ['.js', '.json'],
     },
-    devtool: env.production ? 'eval-source-map' : 'eval',
+    devtool: env.production ? false : 'eval-source-map',
     devServer: env.production ? {} : {
       hot: false,
     },
@@ -96,7 +97,7 @@ module.exports = function(env) {
         },
         {
           test: /\.jsx?$/,
-          loader: 'babel-loader?cacheDirectory=true&retainLines=true',
+          loader: env.production ? 'babel-loader' : 'babel-loader?cacheDirectory=true&retainLines=true',
         },
         {
           test: /\.css$/,
