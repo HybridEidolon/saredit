@@ -31,23 +31,20 @@ export function decompress(buffer) {
         break;
       }
       size = offset & 7;
-      offset = (offset >> 3) - 8192;
+      offset = (offset >> 3) | -0x2000;
       if (size === 0) {
         let num3 = readCursor.readUint8();
         size = num3 + 10;
       } else {
         size += 2;
       }
-
-      offset |= 0xFFFFFFFFFFFFE000;
     } else {
       // short copy
       flag = readCursor.readBit() ? 1 : 0;
       size = readCursor.readBit() ? 1 : 0;
       size = (size | (flag << 1)) + 2;
 
-      offset = readCursor.readInt8();
-      if (offset > 0) offset = -offset;
+      offset = readCursor.readInt8() | -0x100;
     }
 
     // do the actual copy
