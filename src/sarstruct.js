@@ -54,7 +54,9 @@ export const schema = (cursor, registry) => {
   }
 
   let name = [];
-  for (let i = 0; i < 13; i++) {
+  // Read rest of buffer into Symbol Art name
+  let startPos = cursor.pos;
+  for (let i = 0; i < (cursor.dataView.byteLength - startPos) / 2; i++) {
     try {
       let c = struct.parseWithCursor(cursor, 'u16le', registry);
       name.push(c);
