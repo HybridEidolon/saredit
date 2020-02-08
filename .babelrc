@@ -1,18 +1,14 @@
 {
   "presets": [
-    ["env", {
-      "modules": false,
+    ["@babel/preset-env", {
       "targets": {
-        "browsers": ["last 2 versions", "> 5%"],
-        "node": "6.10",
-        "uglify": false
+        "browsers": ["defaults"]
       }
     }],
-    "react"
+    "@babel/preset-react"
   ],
   "env": {
     "test": {
-      "plugins": ["transform-es2015-modules-commonjs"]
     }
   }
 }
