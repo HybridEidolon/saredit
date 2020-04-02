@@ -159,16 +159,12 @@ export default class ReactEditor extends React.Component {
         enable: true,
         func: {
           srcRGB: 'src alpha',
-          srcAlpha: 1,
+          srcAlpha: 'src alpha',
           dstRGB: 'one minus src alpha',
-          dstAlpha: 1,
+          dstAlpha: 'one minus src alpha',
         },
-        equation: {
-          rgb: 'add',
-          alpha: 'add',
-        },
-        color: [0, 0, 0, 0],
       },
+      depth: { enable: false },
     });
   }
 
@@ -181,11 +177,15 @@ export default class ReactEditor extends React.Component {
     if (typeof this.props.sizeWidth !== 'number' || typeof this.props.sizeHeight !== 'number') {
       return;
     }
-
+    
     this.cmdSetupCamera((ctx) => {
-      this.cmdApplyView({translation: [this.props.sizeWidth, this.props.sizeHeight * 2, 0], scale: [this.props.sizeWidth, -this.props.sizeHeight, 1]}, () => {
-        for (let layer of this.props.layers) {
+      this.cmdApplyView({translation: [253/2, 253, 0], scale: [253, -253, 1]}, () => {
+        let layers = this.props.layers.slice(0, this.props.layers.length).reverse();
+        for (let layer of layers) {
           let {points, props} = layer;
+          if (!props.visible) {
+            continue;
+          }
           this.cmdDrawColoredTriangleStrip({
             color: [props.colorR / 63, props.colorG / 63, props.colorB / 63, props.transparency / 7],
             positions: [
@@ -196,6 +196,50 @@ export default class ReactEditor extends React.Component {
             ],
           });
         }
+
+        let w = this.props.sizeWidth;
+        let h = this.props.sizeHeight;
+
+        // left
+        this.cmdDrawColoredTriangleStrip({
+          color: [0, 0, 0, 0.85],
+          positions: [
+            [-500, 0, 0],
+            [(253 - w) / 2, 0, 0],
+            [-500, 253, 0],
+            [(253 - w) / 2, 253, 0],
+          ],
+        });
+        // right
+        this.cmdDrawColoredTriangleStrip({
+          color: [0, 0, 0, 0.85],
+          positions: [
+            [253 - (253 - w) / 2, 0, 0],
+            [500, 0, 0],
+            [253 - (253 - w) / 2, 253, 0],
+            [500, 253, 0],
+          ],
+        });
+        // bottom
+        this.cmdDrawColoredTriangleStrip({
+          color: [0, 0, 0, 0.85],
+          positions: [
+            [(253 - w) / 2, 253 - (253 - h) / 2, 0],
+            [253 - (253 - w) / 2, 253 - (253 - h) / 2, 0],
+            [(253 - w) / 2, 253, 0],
+            [253 - (253 - w) / 2, 253, 0],
+          ],
+        });
+        // top
+        this.cmdDrawColoredTriangleStrip({
+          color: [0, 0, 0, 0.85],
+          positions: [
+            [(253 - w) / 2, 0, 0],
+            [253 - (253 - w) / 2, 0, 0],
+            [(253 - w) / 2, (253 - h) / 2, 0],
+            [253 - (253 - w) / 2, (253 - h) / 2, 0],
+          ],
+        });
       });
     });
   }
