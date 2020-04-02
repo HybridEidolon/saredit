@@ -41,6 +41,10 @@ export default class ReactEditor extends React.Component {
     super(props);
     this.redraw = this.redraw.bind(this);
     this.changeElement = this.changeElement.bind(this);
+    this.containerWheel = this.containerWheel.bind(this);
+    this.state = {
+      zoom: 1,
+    };
   }
 
   componentWillUnmount() {
@@ -54,7 +58,8 @@ export default class ReactEditor extends React.Component {
       this.regl.destroy();
     }
     this.el = el;
-    this.regl = Regl(this.el, {
+    this.regl = Regl({
+      container: el,
       attributes: {
         antialias: false,
         preferLowPowerToHighPerformance: true,
@@ -64,8 +69,21 @@ export default class ReactEditor extends React.Component {
     this.buildCommands();
   }
 
+  containerWheel(ev) {
+    switch (ev.deltaMode) {
+      case 1:
+        this.setState({zoom: Math.min(Math.max(this.state.zoom * Math.pow(0.95, -ev.deltaY), 0.1), 2)});
+        break;
+      case 0:
+        this.setState({zoom: Math.min(Math.max(this.state.zoom * Math.pow(0.999, -ev.deltaY), 0.1), 2)});
+        break;
+      default:
+        break;
+    }
+  }
+
   render() {
-    return <div ref={this.changeElement} style={{height: 480}}/>;
+    return <div ref={this.changeElement} style={{height: 480}} onWheel={this.containerWheel}/>;
   }
 
   buildCommands() {
@@ -179,7 +197,7 @@ export default class ReactEditor extends React.Component {
     }
     
     this.cmdSetupCamera((ctx) => {
-      this.cmdApplyView({translation: [253/2, 253, 0], scale: [253, -253, 1]}, () => {
+      this.cmdApplyView({translation: [253/2, 253, 0], scale: [253 * this.state.zoom, -253 * this.state.zoom, 1]}, () => {
         let layers = this.props.layers.slice(0, this.props.layers.length).reverse();
         for (let layer of layers) {
           let {points, props} = layer;

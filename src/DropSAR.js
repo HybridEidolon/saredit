@@ -95,7 +95,7 @@ export class DropSAR extends Component {
     return (
       <div>
         <p>drop a sar file here</p>
-        <input type="file" name="sarfile" accept="application/*" onChange={this.handleDrop} />
+        <input type="file" name="sarfile" accept=".sar" onChange={this.handleDrop} />
         <p>File name: <code>{this.state.file ? this.state.file.name : 'pick a file'}</code></p>
 
         {this.state.error ?
