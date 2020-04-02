@@ -1,12 +1,16 @@
 # PSO2 Symbol Art Editor
 
-This is a React webapp for editing _Phantasy Star Online 2_ symbol
-arts for use in-game.
+[![CI](https://github.com/HybridEidolon/saredit/workflows/CI/badge.svg)](https://github.com/HybridEidolon/saredit/actions?query=workflow%3ACI)
+
+[Visit App](https://hybrideidolon.github.io/saredit)
+
+This is a React webapp for editing _Phantasy Star Online 2_ symbol arts for use
+in-game.
+
+Heavy work-in-progress.
 
 ## Development
 
-    git clone git@github.com:HybridEidolon/saredit
-    cd saredit
     npm install
     npm run start
 

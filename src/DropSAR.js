@@ -18,14 +18,11 @@ export class DropSAR extends Component {
   constructor(props) {
     super(props);
     this.handleDrop = this.handleDrop.bind(this);
-  }
-
-  componentWillMount() {
-    this.setState({
+    this.state = {
       file: null,
       buffer: null,
       error: false,
-    });
+    };
   }
 
   handleDrop(ev) {
@@ -70,6 +67,10 @@ export class DropSAR extends Component {
             parsed: parsed,
             error: false,
           });
+          console.log(parsed);
+          if (this.props.onUpdateSar) {
+            this.props.onUpdateSar(parsed);
+          }
         } catch (e) {
           this.setState({
             error: e.toString(),
@@ -83,16 +84,20 @@ export class DropSAR extends Component {
         buffer: null,
         error: false,
       });
+      if (this.props.onUpdateSar) {
+        this.props.onUpdateSar(null);
+      }
     }
   }
 
   render() {
+    // <SARPrint buffer={this.state.buffer} parsed={this.state.parsed}/>
     return (
       <div>
         <p>drop a sar file here</p>
         <input type="file" name="sarfile" accept="application/*" onChange={this.handleDrop} />
         <p>File name: <code>{this.state.file ? this.state.file.name : 'pick a file'}</code></p>
-        <SARPrint buffer={this.state.buffer} parsed={this.state.parsed}/>
+
         {this.state.error ?
           <p>Error decoding! {this.state.error}</p>
         : null}
